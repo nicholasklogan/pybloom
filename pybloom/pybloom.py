@@ -2,12 +2,13 @@
 #Charles J. Lai
 #October 12, 2013
 
-from pyhash import fnv_1a
+from pyhash import fnv1a_32
 
 """
 See readme for more information.
 """
 
+#== General bloom filter class implementation ============================
 class BloomFilter:
     """
     Class: A conceptual implmentation of a bloom filter. 
@@ -63,14 +64,14 @@ class BloomFilter:
         #Case 1: string is a single string literal
         if type(string) == str:
             for seed in xrange(self.hash_count):
-                result = int(fnv_1a(string, seed) % self.size)
+                result = int(fnv1a_32(string, seed) % self.size)
                 self.bit_array[result] = 1
         #Case 2: string is a list of strings
         if type(string) == list:
             word_list = string
             for word in word_list:
                 for seed in xrange(self.hash_count):
-                    result = int(fnv_1a(word, seed) % self.size)
+                    result = int(fnv1a_32(word, seed) % self.size)
                     self.bit_array[result] = 1
             
     def test(self, string):
@@ -79,15 +80,13 @@ class BloomFilter:
         if the word is definitely not in the bloom filter.
         """
         for seed in xrange(self.hash_count):
-            result = int(fnv_1a(string, seed) % self.size)
+            result = int(fnv1a_32(string, seed) % self.size)
             if self.bit_array[result] == 0:
                 return False
         return True
 
 
-#=========================================================================
-#                       Various Implementations
-#=========================================================================
+#== Bloom filter implementations =========================================
 class SpellChecker(BloomFilter):
 
     def __init__(self, m, k, word_list_file):
@@ -103,7 +102,7 @@ class SpellChecker(BloomFilter):
         #Test each word in the list of words
         for word in word_list:
             for seed in xrange(self.hash_count):
-                result = int(fnv_1a(word, seed) % self.size)
+                result = int(fnv1a_32(word, seed) % self.size)
                 #If a word is hashed to a 0 bit, add it to mispelled_words
                 if self.bit_array[result] == 0:
                     mispelled_words.append(word)
@@ -113,7 +112,7 @@ class SpellChecker(BloomFilter):
 
 class SheSaidFilter(BloomFilter):
     def __init__(self, m, k, words_she_said):
-        word_list = open(words_she_said).read().split(" ")
+        word_list = open(words_she_said).read().lower().split(" ")
         BloomFilter.__init__(self, m, k)
         self.add(word_list)
 
@@ -130,7 +129,7 @@ class SheSaidFilter(BloomFilter):
         for word in word_list:
             word_in_filter = True
             for seed in xrange(self.hash_count):
-                result = int(fnv_1a(word, seed) % self.size)
+                result = int(fnv1a_32(word, seed) % self.size)
                 #If a word is hashed to a 0 bit, break and test next word
                 if self.bit_array[result] == 0:
                     word_in_filter = False
@@ -138,16 +137,15 @@ class SheSaidFilter(BloomFilter):
             #If the word is hashed to all 1 bits, increment SSC by 1
             if word_in_filter:
                 she_said_coefficient += 1
-        if she_said_coefficient > 2:
+        if she_said_coefficient >1:
             print "That's what she said."
             return True
         else:
             print "That's not what she said."
             return False
 
-#==============================================
-#               Testing App
-#==============================================
+
+#== Testing Application ==================================================
 def main():
     """
     Testing Function

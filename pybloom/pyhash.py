@@ -19,7 +19,7 @@ Methods
 -------
 """
 
-def fnv_1a(string, seed=0):
+def fnv1a_32(string, seed=0):
 	"""
 	Description
 	"""
@@ -39,7 +39,7 @@ def main():
 	"""
 	Testing application: Do something
 	"""
-	print fnv_1a("lol", 2)
+	print fnv1a_32("lol", 2)
 
 #==============================================
 #				Testing App
