@@ -5,7 +5,7 @@
 from pyhash import fnv1a_32
 
 """
-See readme for more information.
+See readme for more information. Or check out the wikipedia entry.
 """
 
 #== General bloom filter class implementation ============================
@@ -88,6 +88,9 @@ class BloomFilter:
 
 #== Bloom filter implementations =========================================
 class SpellChecker(BloomFilter):
+    """
+    An bloom filter implementation of a spell checker.
+    """
 
     def __init__(self, m, k, word_list_file):
         word_list = open(word_list_file).read().lower().split(" ")
@@ -107,10 +110,14 @@ class SpellChecker(BloomFilter):
                 if self.bit_array[result] == 0:
                     mispelled_words.append(word)
                     break;
+        #Return the list of mispelled words
         return mispelled_words
 
 
 class SheSaidFilter(BloomFilter):
+    """
+    A bloom filter implmentation of a that's what she said checker.
+    """
     def __init__(self, m, k, words_she_said):
         word_list = open(words_she_said).read().lower().split(" ")
         BloomFilter.__init__(self, m, k)
@@ -121,7 +128,7 @@ class SheSaidFilter(BloomFilter):
         Returns: True if that's what she said. False if that's not what
         she said.
         """
-        #Initialize list of words and she_said_coefficient (SSC)
+        #Initialize list of words and the she_said_coefficient (SSC)
         she_said_coefficient = 0
         word_list = string.lower().split(" ")
 
@@ -150,7 +157,6 @@ def main():
     """
     Testing Function
     """
-    pass
 
 
 if __name__ == '__main__':
