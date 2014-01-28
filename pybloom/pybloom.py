@@ -101,7 +101,6 @@ class SpellChecker(BloomFilter):
         #Initialize list of words and empty list of mispelled words
         mispelled_words = []
         word_list = string.lower().split(" ")
-
         #Test each word in the list of words
         for word in word_list:
             for seed in xrange(self.hash_count):
@@ -116,17 +115,20 @@ class SpellChecker(BloomFilter):
 
 class SheSaidFilter(BloomFilter):
     """
-    A bloom filter implmentation of a that's what she said checker.
+    A naive Bloom filter implmentation of a that's what she said checker.
     """
     def __init__(self, m, k, words_she_said):
         word_list = open(words_she_said).read().lower().split(" ")
         BloomFilter.__init__(self, m, k)
         self.add(word_list)
 
-    def did_she_say(self, string):
+    def did_she_say(self, string, SSC = 3):
         """
         Returns: True if that's what she said. False if that's not what
         she said.
+
+        The SSC variable is a user defined option to alter the sensitivity
+        of the filter.
         """
         #Initialize list of words and the she_said_coefficient (SSC)
         she_said_coefficient = 0
@@ -144,7 +146,7 @@ class SheSaidFilter(BloomFilter):
             #If the word is hashed to all 1 bits, increment SSC by 1
             if word_in_filter:
                 she_said_coefficient += 1
-        if she_said_coefficient >1:
+        if she_said_coefficient > SSC:
             print "That's what she said."
             return True
         else:
