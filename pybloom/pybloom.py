@@ -49,7 +49,7 @@ class BloomFilter:
     #Built-in Methods
     def __init__(self, m, k):
         """
-        Constructor: Creates a bloom filter with size m bits and k hash
+        Constructor: Creates a Bloom filter with size m bits and k hash
         functions.
         """
         self._size = m
@@ -122,7 +122,7 @@ class SheSaidFilter(BloomFilter):
         BloomFilter.__init__(self, m, k)
         self.add(word_list)
 
-    def did_she_say(self, string, SSC = 3):
+    def did_she_say(self, input, SSC = 3):
         """
         Returns: True if that's what she said. False if that's not what
         she said.
@@ -132,7 +132,7 @@ class SheSaidFilter(BloomFilter):
         """
         #Initialize list of words and the she_said_coefficient (SSC)
         she_said_coefficient = 0
-        word_list = string.lower().split(" ")
+        word_list = input.lower().split(" ")
 
         #Test each word in the list of words
         for word in word_list:
